@@ -8,6 +8,7 @@ fs = "*"
 requests = "*"
 pyinstaller = "*"
 "pypiwin32" = "*"
+clint = "*"
 
 [dev-packages]
 
