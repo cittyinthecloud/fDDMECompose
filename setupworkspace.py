@@ -6,7 +6,7 @@ from fs.memoryfs import MemoryFS
 from fs.zipfs import ZipFS
 import os
 import sys
-from clint.textui import puts, indent
+from clint.textui import puts, indent, progress
 
 puts("Ren'Py setup")
 
@@ -19,7 +19,8 @@ with indent(2):
         r = requests.get("https://www.renpy.org/dl/6.99.12.4/renpy-6.99.12.4-sdk.zip", stream=True)
         r.raise_for_status()
         with cwdfs.open("renpy.zip", 'wb') as fd:
-            for chunk in progress.bar(r.iter_content(chunk_size=1024)):
+            total_length = int(r.headers.get('content-length'))
+            for chunk in progress.bar(r.iter_content(chunk_size=1024), expected_size=(total_length/1024) + 1):
                 fd.write(chunk)
 
     puts("Extracting Ren'Py")
@@ -35,7 +36,8 @@ with indent(2):
         r = requests.get("https://github.com/Monika-After-Story/DDLCModTemplate/releases/download/v1.1.0/DDLCModTemplate_1.1.0.zip", stream=True)
         r.raise_for_status()
         with cwdfs.open("modtemplate.zip", 'wb') as fd:
-            for chunk in r.iter_content(chunk_size=1024):
+            total_length = int(r.headers.get('content-length'))
+            for chunk in progress.bar(r.iter_content(chunk_size=1024), expected_size=(total_length/1024) + 1):
                 fd.write(chunk)
 
         puts("Extracting ModTemplate")
@@ -56,7 +58,8 @@ with indent(2):
                     puts("Downloading")
                     r=requests.get(ddlcurl, stream=True)
                     with cwdfs.open("ddlc-win.zip", 'wb') as fd:
-                        for chunk in r.iter_content(chunk_size=1024):
+                        total_length = int(r.headers.get('content-length'))
+                        for chunk in progress.bar(r.iter_content(chunk_size=1024), expected_size=(total_length/1024) + 1):
                             fd.write(chunk)
 
 
